@@ -1,0 +1,34 @@
+{
+  "name": "my-program-name-workspace",
+  "packageManager": "yarn@3.2.0-rc.12",
+  "version": "0.0.0",
+  "description": "",
+  "author": "Sammy Harris",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build:rust": "(cd program; cargo build-bpf)",
+    "build:sdk": "yarn workspace my-program-name build",
+    "build:docs": "yarn workspace my-program-name build:docs",
+    "build": "yarn build:rust && yarn solita && yarn fix:format && yarn build:sdk && yarn build:docs",
+    "update-sol-deps": "./scripts/update-solana-dependencies.sh",
+    "rename": "./scripts/rename.sh",
+    "amman": "./scripts/amman.sh",
+    "fix:format": "(cd program; cargo fmt) && yarn workspace my-program-name fix:prettier",
+    "lint": "(cd program; cargo clippy) && yarn workspace my-program-name lint"
+  },
+  "workspaces": [
+    "js"
+  ],
+  "devDependencies": {
+    "@metaplex-foundation/solita": "^0.5.2",
+    "@typescript-eslint/eslint-plugin": "^5.4.0",
+    "@typescript-eslint/parser": "^5.4.0",
+    "esbuild-runner": "^2.2.1",
+    "eslint": "^8.3.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "lerna": "^4.0.0",
+    "prettier": "^2.4.1"
+  }
+}
