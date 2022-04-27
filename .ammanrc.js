@@ -4,7 +4,7 @@ const path = require('path');
 const accountProviders = require('./js/dist/generated/accounts');
 
 const localDeployDir = path.join(__dirname, 'program', 'target', 'deploy');
-const MY_PROGRAM_ID = require("./js/idl/my_program_name.json").metadata.address;
+const MY_PROGRAM_ID = require("./js/idl/stakebob.json").metadata.address;
 
 function localDeployPath(programName) {
     return path.join(localDeployDir, `${programName}.so`);
@@ -12,9 +12,9 @@ function localDeployPath(programName) {
 
 const programs = [
     {
-        label: 'my_program_name',
+        label: 'stakebob',
         programId: MY_PROGRAM_ID,
-        deployPath: localDeployPath('my_program_name')
+        deployPath: localDeployPath('stakebob')
     },
     // Example of a program without a local .so file
     // {

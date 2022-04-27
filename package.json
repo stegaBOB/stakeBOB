@@ -1,5 +1,5 @@
 {
-  "name": "my-program-name-workspace",
+  "name": "stakebob-workspace",
   "packageManager": "yarn@3.2.0-rc.12",
   "version": "0.0.0",
   "description": "",
@@ -8,14 +8,14 @@
   "private": true,
   "scripts": {
     "build:rust": "(cd program; cargo build-bpf)",
-    "build:sdk": "yarn workspace my-program-name build",
-    "build:docs": "yarn workspace my-program-name build:docs",
+    "build:sdk": "yarn workspace stakebob build",
+    "build:docs": "yarn workspace stakebob build:docs",
     "build": "yarn build:rust && yarn solita && yarn fix:format && yarn build:sdk && yarn build:docs",
     "update-sol-deps": "./scripts/update-solana-dependencies.sh",
     "rename": "./scripts/rename.sh",
     "amman": "./scripts/amman.sh",
-    "fix:format": "(cd program; cargo fmt) && yarn workspace my-program-name fix:prettier",
-    "lint": "(cd program; cargo clippy) && yarn workspace my-program-name lint"
+    "fix:format": "(cd program; cargo fmt) && yarn workspace stakebob fix:prettier",
+    "lint": "(cd program; cargo clippy) && yarn workspace stakebob lint"
   },
   "workspaces": [
     "js"

@@ -12,24 +12,84 @@ const createErrorFromCodeLookup: Map<number, () => ErrorWithCode> = new Map();
 const createErrorFromNameLookup: Map<string, () => ErrorWithCode> = new Map();
 
 /**
- * ErrorName: 'Error message'
+ * DerivedKeyInvalid: 'Derived key invalid!'
  *
  * @category Errors
  * @category generated
  */
-export class ErrorNameError extends Error {
+export class DerivedKeyInvalidError extends Error {
   readonly code: number = 0x0;
-  readonly name: string = 'ErrorName';
+  readonly name: string = 'DerivedKeyInvalid';
   constructor() {
-    super('Error message');
+    super('Derived key invalid!');
     if (typeof Error.captureStackTrace === 'function') {
-      Error.captureStackTrace(this, ErrorNameError);
+      Error.captureStackTrace(this, DerivedKeyInvalidError);
     }
   }
 }
 
-createErrorFromCodeLookup.set(0x0, () => new ErrorNameError());
-createErrorFromNameLookup.set('ErrorName', () => new ErrorNameError());
+createErrorFromCodeLookup.set(0x0, () => new DerivedKeyInvalidError());
+createErrorFromNameLookup.set('DerivedKeyInvalid', () => new DerivedKeyInvalidError());
+
+/**
+ * DataTypeMismatch: 'Data type mismatch'
+ *
+ * @category Errors
+ * @category generated
+ */
+export class DataTypeMismatchError extends Error {
+  readonly code: number = 0x1;
+  readonly name: string = 'DataTypeMismatch';
+  constructor() {
+    super('Data type mismatch');
+    if (typeof Error.captureStackTrace === 'function') {
+      Error.captureStackTrace(this, DataTypeMismatchError);
+    }
+  }
+}
+
+createErrorFromCodeLookup.set(0x1, () => new DataTypeMismatchError());
+createErrorFromNameLookup.set('DataTypeMismatch', () => new DataTypeMismatchError());
+
+/**
+ * NotInCollection: 'NFT not in a collection'
+ *
+ * @category Errors
+ * @category generated
+ */
+export class NotInCollectionError extends Error {
+  readonly code: number = 0x2;
+  readonly name: string = 'NotInCollection';
+  constructor() {
+    super('NFT not in a collection');
+    if (typeof Error.captureStackTrace === 'function') {
+      Error.captureStackTrace(this, NotInCollectionError);
+    }
+  }
+}
+
+createErrorFromCodeLookup.set(0x2, () => new NotInCollectionError());
+createErrorFromNameLookup.set('NotInCollection', () => new NotInCollectionError());
+
+/**
+ * CollectionNotVerified: 'Collection not verified'
+ *
+ * @category Errors
+ * @category generated
+ */
+export class CollectionNotVerifiedError extends Error {
+  readonly code: number = 0x3;
+  readonly name: string = 'CollectionNotVerified';
+  constructor() {
+    super('Collection not verified');
+    if (typeof Error.captureStackTrace === 'function') {
+      Error.captureStackTrace(this, CollectionNotVerifiedError);
+    }
+  }
+}
+
+createErrorFromCodeLookup.set(0x3, () => new CollectionNotVerifiedError());
+createErrorFromNameLookup.set('CollectionNotVerified', () => new CollectionNotVerifiedError());
 
 /**
  * Attempts to resolve a custom program error from the provided error code.

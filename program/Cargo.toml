@@ -1,17 +1,19 @@
 [package]
-name = "my_program_name"
+name = "stakebob"
 version = "0.1.0"
 edition = "2021"
 license = "MIT"
 publish = false
 
 [dependencies]
-solana-program = "=1.10.9"
+solana-program = "=1.9.18"
 shank = "0.0.2"
 borsh = "0.9.3"
 thiserror = "~1.0"
 num-derive = "0.3.3"
 num-traits = "~0.2"
+mpl-token-metadata = { version = "1.2.7", features = ["no-entrypoint"] }
+spl-token = { version = "3.2.0", features = ["no-entrypoint"] }
 
 
 [features]
@@ -19,10 +21,9 @@ test-bpf = []
 
 [dev-dependencies]
 assert_matches = "1.5.0"
-solana-program-test = "=1.10.9"
-solana-sdk = "=1.10.9"
-solana-validator = "=1.10.9"
-solana-logger = "=1.10.9"
+solana-program-test = "=1.9.18"
+solana-sdk = "=1.9.18"
+solana-logger = "=1.9.18"
 
 [lib]
 crate-type = ["cdylib", "lib"]

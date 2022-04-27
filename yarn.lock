@@ -5085,42 +5085,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"my-program-name-workspace@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "my-program-name-workspace@workspace:."
-  dependencies:
-    "@metaplex-foundation/solita": ^0.5.2
-    "@typescript-eslint/eslint-plugin": ^5.4.0
-    "@typescript-eslint/parser": ^5.4.0
-    esbuild-runner: ^2.2.1
-    eslint: ^8.3.0
-    eslint-config-prettier: ^8.3.0
-    eslint-plugin-prettier: ^4.0.0
-    lerna: ^4.0.0
-    prettier: ^2.4.1
-  languageName: unknown
-  linkType: soft
-
-"my-program-name@workspace:js":
-  version: 0.0.0-use.local
-  resolution: "my-program-name@workspace:js"
-  dependencies:
-    "@metaplex-foundation/cusper": ^0.0.2
-    "@metaplex-foundation/solita": ^0.5.1
-    "@solana/spl-token": ^0.2.0
-    "@solana/web3.js": ^1.35.1
-    "@types/bn.js": ^5.1.0
-    "@types/debug": ^4.1.7
-    bn.js: ^5.2.0
-    debug: ^4.3.3
-    eslint: ^8.3.0
-    rimraf: ^3.0.2
-    supports-color: ^9.2.1
-    typedoc: ^0.22.15
-    typescript: ^4.6.2
-  languageName: unknown
-  linkType: soft
-
 "natural-compare@npm:^1.4.0":
   version: 1.4.0
   resolution: "natural-compare@npm:1.4.0"
@@ -6711,6 +6675,42 @@ __metadata:
   checksum: bf33174232d07cc64e77ab1c51b55d28352273380c503d35642a19627e88a2c5f160039bb0a28608a353485075dda084dbf0390c7070f9f284559eb71d01b84b
   languageName: node
   linkType: hard
+
+"stakebob-workspace@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "stakebob-workspace@workspace:."
+  dependencies:
+    "@metaplex-foundation/solita": ^0.5.2
+    "@typescript-eslint/eslint-plugin": ^5.4.0
+    "@typescript-eslint/parser": ^5.4.0
+    esbuild-runner: ^2.2.1
+    eslint: ^8.3.0
+    eslint-config-prettier: ^8.3.0
+    eslint-plugin-prettier: ^4.0.0
+    lerna: ^4.0.0
+    prettier: ^2.4.1
+  languageName: unknown
+  linkType: soft
+
+"stakebob@workspace:js":
+  version: 0.0.0-use.local
+  resolution: "stakebob@workspace:js"
+  dependencies:
+    "@metaplex-foundation/cusper": ^0.0.2
+    "@metaplex-foundation/solita": ^0.5.1
+    "@solana/spl-token": ^0.2.0
+    "@solana/web3.js": ^1.35.1
+    "@types/bn.js": ^5.1.0
+    "@types/debug": ^4.1.7
+    bn.js: ^5.2.0
+    debug: ^4.3.3
+    eslint: ^8.3.0
+    rimraf: ^3.0.2
+    supports-color: ^9.2.1
+    typedoc: ^0.22.15
+    typescript: ^4.6.2
+  languageName: unknown
+  linkType: soft
 
 "start-server-and-test@npm:^1.14.0":
   version: 1.14.0

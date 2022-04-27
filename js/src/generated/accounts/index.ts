@@ -1,1 +1,2 @@
-export * from './AccountThingy';
+export * from './StakeManager';
+export * from './StakeStatus';
