@@ -24,6 +24,18 @@ pub enum StakeBobError {
     /// collection on NFT about to be staked is not verified
     #[error("Collection not verified")]
     CollectionNotVerified,
+
+    /// Uninitialized
+    #[error("Uninitialized")]
+    Uninitialized,
+
+    /// NFT has not been staked long enough
+    #[error("NFT not ready to unstake")]
+    NotReadyToUnstake,
+
+    /// Amount overflowed aaaahh
+    #[error("Amount overflow")]
+    AmountOverflow,
 }
 
 impl PrintProgramError for StakeBobError {

@@ -1,4 +1,5 @@
 use crate::{
+    error::StakeBobError,
     instruction::{InitStakeManagerArgs, StakeArgs, StakeBobInstruction, UnstakeArgs},
     state::{
         Key, StakeManager, StakeStatus, MANAGER, STAKE_MANAGER_SIZE, STAKE_STATUS_SIZE, STATUS,
@@ -6,12 +7,14 @@ use crate::{
     utils::{
         assert_in_verified_collection, assert_keys_equal, assert_mint, assert_signer,
         assert_token_account, assert_uninitialized, assert_valid_token_account,
-        create_rent_exempt_owned, delegate_nft, freeze_nft,
+        create_rent_exempt_owned, delegate_nft, freeze_nft, thaw_nft, undelegate_nft,
     },
 };
 use borsh::{BorshDeserialize, BorshSerialize};
 use mpl_token_metadata::{
-    assertions::collection::assert_master_edition, state::Metadata, utils::assert_owned_by,
+    assertions::collection::assert_master_edition,
+    state::Metadata,
+    utils::{assert_currently_holding, assert_owned_by},
 };
 use solana_program::{
     account_info::{next_account_info, AccountInfo},
@@ -119,7 +122,6 @@ impl Processor {
 
         let nft_metadata = Metadata::from_account_info(nft_metadata_info)?;
         assert_keys_equal(&nft_metadata.mint, nft_mint_info.key)?;
-        assert_keys_equal(&nft_metadata.update_authority, staker_info.key)?;
         assert_in_verified_collection(&nft_metadata, collection_mint_info.key)?;
 
         let nft_edition_info = next_account_info(account_info_iter)?;
@@ -128,6 +130,14 @@ impl Processor {
 
         let nft_token_account_info = next_account_info(account_info_iter)?;
         assert_token_account(nft_token_account_info)?;
+        assert_currently_holding(
+            &mpl_token_metadata::id(),
+            staker_info,
+            nft_metadata_info,
+            &nft_metadata,
+            nft_mint_info,
+            nft_token_account_info,
+        )?;
 
         let nft_token_account =
             TokenAccount::unpack_unchecked(&nft_token_account_info.try_borrow_data()?)?;
@@ -167,7 +177,7 @@ impl Processor {
             token_program_info,
         )?;
 
-        let timestamp = Clock::get()?.unix_timestamp as u64;
+        let timestamp = Clock::get()?.unix_timestamp;
 
         StakeStatus {
             key: Key::StakeStatusV1,
@@ -183,9 +193,94 @@ impl Processor {
     pub fn process_unstake(
         _program_id: &Pubkey,
         accounts: &[AccountInfo],
-        _args: UnstakeArgs,
+        args: UnstakeArgs,
     ) -> ProgramResult {
-        let _account_info_iter = &mut accounts.iter();
+        let account_info_iter = &mut accounts.iter();
+        let staker_info = next_account_info(account_info_iter)?;
+        assert_signer(staker_info)?;
+
+        let token_metadata_program_info = next_account_info(account_info_iter)?;
+        assert_keys_equal(token_metadata_program_info.key, &mpl_token_metadata::id())?;
+
+        let token_program_info = next_account_info(account_info_iter)?;
+        assert_keys_equal(token_program_info.key, &spl_token::id())?;
+
+        let collection_mint_info = next_account_info(account_info_iter)?;
+        assert_mint(collection_mint_info)?;
+
+        let nft_metadata_info = next_account_info(account_info_iter)?;
+        assert_owned_by(nft_metadata_info, &mpl_token_metadata::id())?;
+
+        let nft_mint_info = next_account_info(account_info_iter)?;
+        assert_mint(nft_mint_info)?;
+
+        let nft_metadata = Metadata::from_account_info(nft_metadata_info)?;
+        assert_keys_equal(&nft_metadata.mint, nft_mint_info.key)?;
+
+        let nft_edition_info = next_account_info(account_info_iter)?;
+        assert_owned_by(nft_edition_info, &mpl_token_metadata::id())?;
+
+        let nft_token_account_info = next_account_info(account_info_iter)?;
+        assert_token_account(nft_token_account_info)?;
+        assert_currently_holding(
+            &mpl_token_metadata::id(),
+            staker_info,
+            nft_metadata_info,
+            &nft_metadata,
+            nft_mint_info,
+            nft_token_account_info,
+        )?;
+
+        let stake_manager_pda_info = next_account_info(account_info_iter)?;
+        let (stake_manager_pda_key, _) =
+            StakeManager::find_address(collection_mint_info.key, Some(args.stake_manager_pda_bump));
+        assert_keys_equal(&stake_manager_pda_key, stake_manager_pda_info.key)?;
+
+        let stake_status_pda_info = next_account_info(account_info_iter)?;
+        let (stake_status_pda_key, bump) =
+            StakeStatus::find_address(nft_mint_info.key, Some(args.stake_status_pda_bump));
+        assert_keys_equal(&stake_status_pda_key, stake_status_pda_info.key)?;
+
+        let stake_manager_pda = StakeManager::from_account_info(stake_manager_pda_info)?;
+        let stake_status_pda = StakeStatus::from_account_info(stake_status_pda_info)?;
+        assert_keys_equal(&stake_status_pda.collection_mint, collection_mint_info.key)?;
+        let timestamp = Clock::get()?.unix_timestamp;
+        let time_staked = timestamp - stake_status_pda.stake_start;
+        if time_staked < stake_manager_pda.min_stake_time {
+            return Err(StakeBobError::NotReadyToUnstake.into());
+        }
+
+        // Note: We are not checking whether the collection passed in is the collection on the NFT.
+        // If we have gotten to this point, assuming my code works, we know that at some point the NFT had
+        // the verified collection that is the same as what we passed in. That is all we need to check.
+
+        let seeds = &[STATUS.as_ref(), nft_mint_info.key.as_ref(), &[bump]];
+
+        thaw_nft(
+            token_metadata_program_info,
+            stake_status_pda_info,
+            nft_token_account_info,
+            nft_edition_info,
+            nft_mint_info,
+            token_program_info,
+            &[seeds],
+        )?;
+
+        undelegate_nft(
+            token_program_info,
+            nft_token_account_info,
+            staker_info,
+            stake_status_pda_info,
+            &[seeds],
+        )?;
+
+        **staker_info.lamports.borrow_mut() = staker_info
+            .lamports()
+            .checked_add(stake_status_pda_info.lamports())
+            .ok_or(StakeBobError::AmountOverflow)?;
+        **staker_info.lamports.borrow_mut() = 0;
+        *stake_status_pda_info.try_borrow_mut_data()? = &mut [];
+
         Ok(())
     }
 }

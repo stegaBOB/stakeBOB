@@ -34,7 +34,7 @@ pub enum Key {
 #[derive(Clone, BorshSerialize, BorshDeserialize, Debug, ShankAccount)]
 pub struct StakeManager {
     pub key: Key,
-    pub min_stake_time: u64,
+    pub min_stake_time: i64,
 }
 
 #[repr(C)]
@@ -43,7 +43,7 @@ pub struct StakeStatus {
     pub key: Key,
     pub collection_mint: Pubkey,
     pub mint: Pubkey,
-    pub stake_start: u64,
+    pub stake_start: i64,
 }
 
 // pub trait FromAccountInfo {
@@ -53,8 +53,8 @@ pub struct StakeStatus {
 // }
 
 impl StakeManager {
-    pub fn from_account_info(account_info: &AccountInfo) -> Result<StakeStatus, ProgramError> {
-        let status: StakeStatus = try_from_slice_checked(
+    pub fn from_account_info(account_info: &AccountInfo) -> Result<StakeManager, ProgramError> {
+        let status: StakeManager = try_from_slice_checked(
             &account_info.data.borrow_mut(),
             Key::StakeStatusV1,
             STAKE_STATUS_SIZE,

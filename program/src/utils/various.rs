@@ -1,6 +1,5 @@
-use crate::{error::StakeBobError, state::Key, utils::assert_keys_equal};
+use crate::{error::StakeBobError, state::Key};
 use borsh::BorshDeserialize;
-use mpl_token_metadata::state::Metadata;
 use solana_program::{
     account_info::AccountInfo,
     borsh::try_from_slice_unchecked,
@@ -8,7 +7,6 @@ use solana_program::{
     program::invoke_signed,
     program_error::ProgramError,
     program_memory::sol_memcmp,
-    program_pack::Pack,
     pubkey::{Pubkey, PUBKEY_BYTES},
     rent::Rent,
     system_instruction,
@@ -32,15 +30,6 @@ pub fn try_from_slice_checked<T: BorshDeserialize>(
 
     let result = try_from_slice_unchecked(data)?;
     Ok(result)
-}
-
-pub fn assert_mint(mint: &AccountInfo) -> ProgramResult {
-    match mint.owner != &spl_token::id()
-        && mint.data_len() != spl_token::state::Mint::get_packed_len()
-    {
-        true => Err(ProgramError::InvalidAccountData),
-        false => Ok(()),
-    }
 }
 
 pub fn create_rent_exempt_owned<'a>(
@@ -70,32 +59,4 @@ pub fn create_rent_exempt_owned<'a>(
         ],
         &[seeds],
     )
-}
-
-pub fn assert_in_verified_collection(
-    metadata: &Metadata,
-    collection_pubkey: &Pubkey,
-) -> ProgramResult {
-    match &metadata.collection {
-        Some(collection) => {
-            assert_keys_equal(&collection.key, collection_pubkey).map_err(|_| {
-                let to_return: ProgramError = StakeBobError::NotInCollection.into();
-                to_return
-            })?;
-            if collection.verified {
-                Ok(())
-            } else {
-                Err(StakeBobError::NotInCollection.into())
-            }
-        }
-        None => Err(StakeBobError::NotInCollection.into()),
-    }
-}
-
-pub fn assert_uninitialized(account_info: &AccountInfo) -> ProgramResult {
-    if account_info.data_is_empty() {
-        Ok(())
-    } else {
-        Err(ProgramError::AccountAlreadyInitialized)
-    }
 }

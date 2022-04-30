@@ -16,10 +16,10 @@ const programs = [
         programId: MY_PROGRAM_ID,
         deployPath: localDeployPath('stakebob')
     },
-    // Example of a program without a local .so file
     // {
     //     label: 'token_metadata',
     //     programId: 'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s',
+    //     deployPath: "https://api.metaplex.solana.com"
     // },
 ];
 
