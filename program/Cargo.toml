@@ -1,7 +1,7 @@
 [package]
 name = "stakebob"
 version = "0.1.0"
-authors = "Sammy Harris"
+authors = ["Sammy Harris <sammy@stegabob.com>"]
 edition = "2021"
 license = "MIT"
 description = "An escrowless Metaplex NFT staking program on Solana."
