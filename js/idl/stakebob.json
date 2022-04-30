@@ -1,0 +1,361 @@
+{
+  "version": "0.1.0",
+  "name": "stakebob",
+  "instructions": [
+    {
+      "name": "InitStakeManager",
+      "accounts": [
+        {
+          "name": "stakeInitializer",
+          "isMut": true,
+          "isSigner": true,
+          "desc": "Account that initializes the stake manager. Also has to be the authority of the provided collection NFT"
+        },
+        {
+          "name": "stakeManagerPda",
+          "isMut": true,
+          "isSigner": false,
+          "desc": "The stakeBOB stake manager account"
+        },
+        {
+          "name": "collectionMint",
+          "isMut": false,
+          "isSigner": false,
+          "desc": "The mint of the collection NFT"
+        },
+        {
+          "name": "collectionMetadata",
+          "isMut": false,
+          "isSigner": false,
+          "desc": "The token metadata for the collection NFT"
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false,
+          "desc": "The system program"
+        }
+      ],
+      "args": [
+        {
+          "name": "initStakeManagerArgs",
+          "type": {
+            "defined": "InitStakeManagerArgs"
+          }
+        }
+      ],
+      "discriminant": {
+        "type": "u8",
+        "value": 0
+      }
+    },
+    {
+      "name": "Stake",
+      "accounts": [
+        {
+          "name": "staker",
+          "isMut": true,
+          "isSigner": true,
+          "desc": "Account that is about to stake their NFT"
+        },
+        {
+          "name": "tokenMetadataProgram",
+          "isMut": false,
+          "isSigner": false,
+          "desc": "The Token Metadata Program"
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false,
+          "desc": "The SPL Token Program"
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false,
+          "desc": "The system program"
+        },
+        {
+          "name": "collectionMint",
+          "isMut": false,
+          "isSigner": false,
+          "desc": "The mint of the collection NFT"
+        },
+        {
+          "name": "nftMetadata",
+          "isMut": false,
+          "isSigner": false,
+          "desc": "The token metadata for the NFT to be staked"
+        },
+        {
+          "name": "nftMint",
+          "isMut": false,
+          "isSigner": false,
+          "desc": "The mint for the NFT to be staked"
+        },
+        {
+          "name": "nftEdition",
+          "isMut": false,
+          "isSigner": false,
+          "desc": "The master edition account for the NFT to be staked"
+        },
+        {
+          "name": "nftTokenAccount",
+          "isMut": true,
+          "isSigner": false,
+          "desc": "The token account for the NFT to be staked"
+        },
+        {
+          "name": "stakeManagerPda",
+          "isMut": true,
+          "isSigner": false,
+          "desc": "The stakeBOB stake manager account"
+        },
+        {
+          "name": "stakeStatusPda",
+          "isMut": true,
+          "isSigner": false,
+          "desc": "The new stake status PDA account"
+        }
+      ],
+      "args": [
+        {
+          "name": "stakeArgs",
+          "type": {
+            "defined": "StakeArgs"
+          }
+        }
+      ],
+      "discriminant": {
+        "type": "u8",
+        "value": 1
+      }
+    },
+    {
+      "name": "Unstake",
+      "accounts": [
+        {
+          "name": "staker",
+          "isMut": true,
+          "isSigner": true,
+          "desc": "Account that is about to unstake their NFT"
+        },
+        {
+          "name": "tokenMetadataProgram",
+          "isMut": false,
+          "isSigner": false,
+          "desc": "The Token Metadata Program"
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false,
+          "desc": "The SPL Token Program"
+        },
+        {
+          "name": "collectionMint",
+          "isMut": false,
+          "isSigner": false,
+          "desc": "The mint of the collection NFT"
+        },
+        {
+          "name": "nftMetadata",
+          "isMut": false,
+          "isSigner": false,
+          "desc": "The token metadata for the NFT to be unstaked"
+        },
+        {
+          "name": "nftMint",
+          "isMut": false,
+          "isSigner": false,
+          "desc": "The mint for the NFT to be unstaked"
+        },
+        {
+          "name": "nftEdition",
+          "isMut": false,
+          "isSigner": false,
+          "desc": "The master edition marker account for the NFT to be unstaked"
+        },
+        {
+          "name": "nftTokenAccount",
+          "isMut": true,
+          "isSigner": false,
+          "desc": "The token account for the NFT to be unstaked"
+        },
+        {
+          "name": "stakeManagerPda",
+          "isMut": true,
+          "isSigner": false,
+          "desc": "The stakeBOB stake manager account"
+        },
+        {
+          "name": "stakeStatusPda",
+          "isMut": true,
+          "isSigner": false,
+          "desc": "The stake status PDA account"
+        }
+      ],
+      "args": [
+        {
+          "name": "unstakeArgs",
+          "type": {
+            "defined": "UnstakeArgs"
+          }
+        }
+      ],
+      "discriminant": {
+        "type": "u8",
+        "value": 2
+      }
+    }
+  ],
+  "accounts": [
+    {
+      "name": "StakeManager",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "key",
+            "type": {
+              "defined": "Key"
+            }
+          },
+          {
+            "name": "minStakeTime",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "StakeStatus",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "key",
+            "type": {
+              "defined": "Key"
+            }
+          },
+          {
+            "name": "collectionMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "mint",
+            "type": "publicKey"
+          },
+          {
+            "name": "stakeStart",
+            "type": "i64"
+          }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "InitStakeManagerArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "minStakeTime",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "StakeArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "stakeManagerPdaBump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "UnstakeArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "stakeManagerPdaBump",
+            "type": "u8"
+          },
+          {
+            "name": "stakeStatusPdaBump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Key",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Uninitialized"
+          },
+          {
+            "name": "StakeManagerV1"
+          },
+          {
+            "name": "StakeStatusV1"
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 0,
+      "name": "DerivedKeyInvalid",
+      "msg": "Derived key invalid!"
+    },
+    {
+      "code": 1,
+      "name": "DataTypeMismatch",
+      "msg": "Data type mismatch"
+    },
+    {
+      "code": 2,
+      "name": "NotInCollection",
+      "msg": "NFT not in a collection"
+    },
+    {
+      "code": 3,
+      "name": "CollectionNotVerified",
+      "msg": "Collection not verified"
+    },
+    {
+      "code": 4,
+      "name": "Uninitialized",
+      "msg": "Uninitialized"
+    },
+    {
+      "code": 5,
+      "name": "NotReadyToUnstake",
+      "msg": "NFT not ready to unstake"
+    },
+    {
+      "code": 6,
+      "name": "AmountOverflow",
+      "msg": "Amount overflow"
+    }
+  ],
+  "metadata": {
+    "origin": "shank",
+    "address": "MyProgram1111111111111111111111111111111111",
+    "binaryVersion": "0.0.2",
+    "libVersion": "0.0.2"
+  }
+}
